@@ -1,0 +1,45 @@
+<!DOCTYPE html><html><head>
+    <style>
+      #canvas {
+        position: absolute;
+        inset: 0px;
+        margin: auto;
+        width: 1018px;
+        height: 937px;
+      }
+    </style>
+  
+<link rel="preload" href="/aboutme-e01d09f4eb511d37_bg.wasm" as="fetch" type="application/wasm" crossorigin="">
+<link rel="modulepreload" href="/aboutme-e01d09f4eb511d37.js"></head>
+  <body>
+    <canvas id="canvas"></canvas>
+  
+
+<script type="module">import init from '/aboutme-e01d09f4eb511d37.js';init('/aboutme-e01d09f4eb511d37_bg.wasm');</script><script>(function () {
+    var protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    var url = protocol + '//' + window.location.host + '/_trunk/ws';
+    var poll_interval = 5000;
+    var reload_upon_connect = () => {
+        window.setTimeout(
+            () => {
+                // when we successfully reconnect, we'll force a
+                // reload (since we presumably lost connection to
+                // trunk due to it being killed, so it will have
+                // rebuilt on restart)
+                var ws = new WebSocket(url);
+                ws.onopen = () => window.location.reload();
+                ws.onclose = reload_upon_connect;
+            },
+            poll_interval);
+    };
+
+    var ws = new WebSocket(url);
+    ws.onmessage = (ev) => {
+        const msg = JSON.parse(ev.data);
+        if (msg.reload) {
+            window.location.reload();
+        }
+    };
+    ws.onclose = reload_upon_connect;
+})()
+</script></body></html>
